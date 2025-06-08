@@ -1,11 +1,11 @@
 # Uncomment the required imports before adding the code
-from django.shortcuts import render
+# from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, redirect
+# from django.shortcuts import redirect
 from django.contrib.auth import logout
-from django.contrib import messages
-from datetime import datetime
+# from django.contrib import messages
+# from datetime import datetime
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 import logging
@@ -22,12 +22,13 @@ logger = logging.getLogger(__name__)
 def get_cars(request):
     count = CarMake.objects.filter().count()
     print(count)
-    if(count == 0):
+    if (count == 0):
         initiate()
     car_models = CarModel.objects.select_related('car_make')
     cars = []
     for car_model in car_models:
-        cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
+        cars.append({"CarModel": car_model.name,
+                     "CarMake": car_model.car_make.name})
     return JsonResponse({"CarModels": cars})
 
 
@@ -51,7 +52,7 @@ def login_user(request):
 # Create a `logout_request` view to handle sign out request
 @csrf_exempt
 def logout_request(request):
-    logout(request) # Terminate user session
+    logout(request)  # Terminate user session
     data = {"userName": ""} # Return empty username
     return JsonResponse(data)
 
@@ -78,6 +79,7 @@ def registration(request):
         # If not, simply log this is a new user
         logger.debug("{} is new user".format(username))
 
+    
     # If it is a new user
     if not username_exist:
         # Create user in auth_user table
@@ -91,6 +93,7 @@ def registration(request):
         data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
 
+
 #Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
 def get_dealerships(request, state="All"):
     if(state == "All"):
@@ -99,6 +102,7 @@ def get_dealerships(request, state="All"):
         endpoint = "/fetchDealers/"+state
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
+
 
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
 def get_dealer_reviews(request, dealer_id):
@@ -114,6 +118,7 @@ def get_dealer_reviews(request, dealer_id):
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
+
 # Create a `get_dealer_details` view to render the dealer details
 def get_dealer_details(request, dealer_id):
     if(dealer_id):
@@ -122,6 +127,7 @@ def get_dealer_details(request, dealer_id):
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
+
 
 # Create a `add_review` view to submit a review
 def add_review(request):
